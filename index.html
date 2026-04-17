@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareBridge - AI-Powered Complete Healthcare Network</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config={
+theme:{
+extend:{
+fontFamily:{ sans:['Plus Jakarta Sans', 'sans-serif']},
+colors:{
+primary: '#1e40af',
+accent: '#06b6d4',
+success: '#059669',
+warning: '#d97706',
+danger: '#dc2626'
+}
+}
+}
+}
+</script>
+<style>
+*{ margin: 0; padding: 0; box-sizing: border-box;}
+body{ font-family:'Plus Jakarta Sans', sans-serif; min-height: 100vh;}
+.public-bg{
+background: linear-gradient(135deg,#1e40af 0%,#06b6d4 50%,#059669 100%);
+}
+.dashboard-bg{
+background: linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);
+}
+.glass{
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(30px);
+border: 1px solid rgba(255, 255, 255, 0.5);
+box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+.glass-card{
+background: rgba(255, 255, 255, 0.9);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.6);
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+transition: all 0.3s;
+}
+.glass-card:hover{
+transform: translateY(-4px);
+box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+}
+.dashboard-card{
+background: rgba(30, 41, 59, 0.8);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.section{ display: none;}
+.section.active{ display: block; animation: fadeIn 0.5s;}
+@keyframes fadeIn{ from{ opacity: 0;} to{ opacity: 1;}}
+.gradient-text{
+background: linear-gradient(135deg,#60a5fa,#06b6d4,#059669);
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+.btn-primary {
+background: linear-gradient(135deg,#1e40af,#06b6d4);
+transition: all 0.3s;
+cursor: pointer;
+}
+.btn-primary:hover{
+transform: translateY(-2px);
+box-shadow: 0 15px 35px rgba(30, 64, 175, 0.4);
+}
+.btn-success{
+background: linear-gradient(135deg,#059669,#10b981);
+transition: all 0.3s;
+cursor: pointer;
+}
+.btn-danger{
+background: linear-gradient(135deg,#dc2626,#ef4444);
+transition: all 0.3s;
+cursor: pointer;
+}
+.hover-card{ transition: all 0.3s;}
+.hover-card:hover{ transform: translateY(-4px);}
+.live-indicator{
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.25rem 0.75rem;
+background: rgba(5, 150, 105, 0.2);
+color:#059669;
+border-radius: 9999px;
+font-size: 0.75rem;
+font-weight: 700;
+}
+.live-dot{
+width: 8px;
+height: 8px;
+background:#10b981;
+border-radius: 50%;
+animation: pulse 2s infinite;
+}
+@keyframes pulse{
+0%, 100%{ opacity: 1;}
+50%{ opacity: 0.5;}
+}
+.stat-card{
+background: rgba(30, 58, 138, 0.3);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 1rem;
+padding: 1.5rem;
+text-align: center;
+}
+.emergency-btn{
+background: linear-gradient(135deg,#7f1d1d,#991b1b);
+color: white;
+padding: 0.75rem;
+border-radius: 0.5rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 0.5rem;
+}
+.emergency-btn:hover{
+transform: translateY(-2px);
+box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+}
+.status-badge{
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-size: 0.75rem;
+font-weight: 600;
+}
+.status-available{ background: rgba(5, 150, 105, 0.2); color:#059669;}
+.status-break{ background: rgba(217, 119, 6, 0.2); color:#d97706;}
+.status-not-available{ background: rgba(220, 38, 38, 0.2); color:#dc2626;}
+.status-delayed{ background: rgba(245, 158, 11, 0.2); color:#f59e0b;}
+.doctor-status-container{
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 0.75rem 1.25rem;
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border-radius: 1rem;
+margin-top: 1rem;
+}
+.status-dot{
+width: 12px;
+height: 12px;
+border-radius: 50%;
+position: relative;
+animation: pulse-dot 2s infinite;
+}
+.status-dot.available{
+background:#10b981;
+box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+}
+.status-dot.delayed{
+background:#f59e0b;
+box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+}
+.status-dot.not-available{
+background:#dc2626;
+box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+}
+.status-dot.break{
+background:#6b7280;
+box-shadow: 0 0 0 0 rgba(107, 114, 128, 0.7);
+}
+@keyframes pulse-dot{
+0%{
+transform: scale(0.95);
+box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+}
+70%{
+transform: scale(1);
+box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+}
+100%{
+transform: scale(0.95);
+box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+}
+}
+.chatbot-container{
+position: fixed;
+bottom: 20px;
+right: 20px;
+z-index: 1000;
+}
+.chatbot-button{
+width: 60px;
+height: 60px;
+border-radius: 50%;
+background: linear-gradient(135deg,#667eea,#764ba2);
+color: white;
+border: none;
+cursor: pointer;
+box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+transition: all 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 24px;
+}
+.chatbot-button:hover{
+transform: scale(1.1);
+}
+.chatbot-window{
+position: fixed;
+bottom: 90px;
+right: 20px;
+width: 450px;
+height: 600px;
+background: white;
+border-radius: 20px;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+display: none;
+flex-direction: column;
+overflow: hidden;
+z-index: 1001;
+}
+.chatbot-header{
+background: linear-gradient(135deg,#667eea,#764ba2);
+color: white;
+padding: 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.chatbot-messages{
+flex: 1;
+padding: 20px;
+overflow-y: auto;
+background:#f8fafc;
+}
+.chatbot-input{
+padding: 15px;
+border-top: 1px solid#e2e8f0;
+display: flex;
+gap: 10px;
+background: white;
+}
+.chatbot-input input{
+flex: 1;
+padding: 12px 15px;
+border: 2px solid#e2e8f0;
+border-radius: 25px;
+outline: none;
+}
+.chatbot-input button{
+width: 45px;
+height: 45px;
+border-radius: 50%;
+background: linear-gradient(135deg,#667eea,#764ba2);
+color: white;
+border: none;
+cursor: pointer;
+}
+.message{
+margin-bottom: 15px;
+max-width: 80%;
+}
+.message.bot{ margin-right: auto;}
+.message.user{ margin-left: auto; text-align: right;}
+.message-content{
+padding: 12px 16px;
+border-radius: 18px;
+display: inline-block;
+}
+.message.bot .message-content{
+background: white;
+color:#1e293b;
+}
+.message.user .message-content{
+background: linear-gradient(135deg,#667eea,#764ba2);
+color: white;
+}
+.quick-replies{
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 10px;
+}
+.quick-reply-btn{
+padding: 8px 16px;
+background: white;
+border: 2px solid#667eea;
+color:#667eea;
+border-radius: 20px;
+cursor: pointer;
+font-size: 13px;
+}
+.quick-reply-btn:hover{
+background:#667eea;
+color: white;
+}
+.notification-toast{
+position: fixed;
+top: 100px;
+right: 20px;
+background: white;
+border-left: 4px solid#059669;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+padding: 1rem 1.5rem;
+border-radius: 0.5rem;
+z-index: 2000;
+animation: slideIn 0.3s ease-out;
+max-width: 350px;
+}
+@keyframes slideIn{
+from{ transform: translateX(400px); opacity: 0;}
+to{ transform: translateX(0); opacity: 1;}
+}
+.data-source{
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border-radius: 0.5rem;
+padding: 0.75rem 1rem;
+margin-top: 1rem;
+font-size: 0.875rem;
+}
+.queue-policy-box{
+background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+border: 2px solid rgba(59, 130, 246, 0.3);
+border-radius: 1rem;
+padding: 1.5rem;
+margin-top: 1.5rem;
+}
+/* NEW: Diagnostic, Bed, Ambulance Styles */
+.slot-card{
+background: white;
+border: 2px solid #e5e7eb;
+border-radius: 1rem;
+padding: 1.5rem;
+transition: all 0.3s;
+cursor: pointer;
+}
+.slot-card:hover{
+border-color: #1e40af;
+box-shadow: 0 10px 30px rgba(30, 64, 175, 0.1);
+transform: translateY(-2px);
+}
+.bed-status{
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.5rem 1rem;
+border-radius: 9999px;
+font-weight: 600;
+font-size: 0.875rem;
+}
+.bed-available{ background: rgba(5, 150, 105, 0.2); color: #059669; }
+.bed-occupied{ background: rgba(220, 38, 38, 0.2); color: #dc2626; }
+.bed-critical{ background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.ambulance-card{
+background: white;
+border-radius: 1rem;
+padding: 1.5rem;
+margin-bottom: 1rem;
+border-left: 4px solid #1e40af;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.ai-feature-badge{
+background: linear-gradient(135deg, #667eea, #764ba2);
+color: white;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-size: 0.75rem;
+font-weight: 700;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+}
+.upload-area{
+border: 2px dashed #cbd5e1;
+border-radius: 1rem;
+padding: 2rem;
+text-align: center;
+cursor: pointer;
+transition: all 0.3s;
+background: linear-gradient(145deg, #ffffff, #f8fafc);
+box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+.upload-area:hover{
+border-color: #1e40af;
+background: rgba(30, 64, 175, 0.05);
+transform: translateY(-2px);
+box-shadow: 0 18px 40px rgba(30, 64, 175, 0.16);
+}
+.diagnostic-panel{
+background: linear-gradient(160deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 249, 255, 0.97) 100%);
+border: 1px solid rgba(147, 197, 253, 0.35);
+position: relative;
+overflow: hidden;
+}
+.diagnostic-panel::before{
+content: "";
+position: absolute;
+top: -80px;
+right: -80px;
+width: 220px;
+height: 220px;
+background: radial-gradient(circle, rgba(59, 130, 246, 0.16) 0%, rgba(59, 130, 246, 0) 70%);
+pointer-events: none;
+}
+.diagnostic-result-card{
+background: linear-gradient(165deg, #f5f3ff 0%, #eff6ff 100%);
+border: 1px solid #c4b5fd;
+box-shadow: inset 0 0 30px rgba(79, 70, 229, 0.08);
+}
+.ai-cta-btn{
+background: linear-gradient(135deg, #4f46e5, #7c3aed);
+box-shadow: 0 12px 25px rgba(79, 70, 229, 0.35);
+transition: all 0.3s;
+}
+.ai-cta-btn:hover{
+transform: translateY(-2px);
+box-shadow: 0 18px 35px rgba(79, 70, 229, 0.45);
+}
+</style>
+</head>
+<body>
+<!--==================== PUBLIC NAVIGATION====================-->
+<nav id="public-nav" class="fixed w-full z-50 glass border-b border-white/20">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex justify-between items-center h-20">
+<div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+<div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-green-600 rounded-xl flex items-center justify-center text-white">
+<i class="fa-solid fa-plus text-2xl"></i>
+</div>
+<div>
+<h1 class="font-bold text-2xl gradient-text">CareBridge</h1>
+<p class="text-[10px] text-slate-600">AI-POWERED HEALTHCARE NETWORK</p>
+</div>
+</div>
+<div class="hidden md:flex items-center space-x-2 bg-white/60 rounded-full px-6 py-3">
+<button onclick="goHome()" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">Home</button>
+<button onclick="showSection('hospitals')" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">Hospitals</button>
+<button onclick="showSection('diagnostics')" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">Diagnostics</button>
+<button onclick="showSection('beds')" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">Beds</button>
+<button onclick="showSection('pharmacy')" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">Pharmacy</button>
+<button onclick="showSection('ambulance')" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">Ambulance</button>
+<button onclick="showSection('about')" class="px-4 py-2 rounded-full text-sm font-bold text-slate-700 hover:bg-white transition">About</button>
+</div>
+<div class="flex items-center gap-3">
+<button onclick="showSection('emergency')" class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition">
+<i class="fa-solid fa-heart-pulse mr-2"></i>Emergency
+</button>
+<button onclick="openLoginModal()" class="bg-white text-slate-700 px-5 py-2.5 rounded-full font-bold shadow-lg">
+<i class="fa-solid fa-user mr-2"></i>Portal
+</button>
+</div>
+</div>
+</div>
+</nav>
+
+<!--==================== MAIN CONTENT====================-->
+<div class="pt-24 pb-12">
+<!--===== PUBLIC SECTIONS=====-->
+<div id="public-sections">
+<!-- Home Section-->
+<section id="home" class="section active public-bg">
+<div class="max-w-7xl mx-auto px-4 py-16">
+<div class="text-center mb-12">
+<h1 class="text-5xl md:text-6xl font-black text-white mb-6">
+AI-Powered Healthcare,<br><span style="background: linear-gradient(to right, #fde047,#34d399);-webkit-background-clip: text;background-clip: text;-webkit-text-fill-color: transparent;">Skip the Queue</span>
+</h1>
+<p class="text-blue-100 text-xl mb-10">Book appointments • Get AI diagnosis • Upload prescriptions • Live queue status • Emergency response</p>
+
+<!-- AI Features Highlight -->
+<div class="max-w-4xl mx-auto mb-8">
+<div class="glass rounded-2xl p-6">
+<div class="flex items-center justify-center gap-2 text-white mb-4">
+<span class="ai-feature-badge">
+<i class="fa-solid fa-robot"></i>
+AI-Powered Features
+</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+<div class="bg-white/10 rounded-xl p-4">
+<div class="flex items-center gap-2 mb-2">
+<i class="fa-solid fa-stethoscope text-blue-300"></i>
+<span class="font-bold">AI Symptom Checker</span>
+</div>
+<p class="text-sm text-blue-100">Describe symptoms or upload prescription for instant AI analysis</p>
+</div>
+<div class="bg-white/10 rounded-xl p-4">
+<div class="flex items-center gap-2 mb-2">
+<i class="fa-solid fa-file-medical text-green-300"></i>
+<span class="font-bold">Smart Diagnosis</span>
+</div>
+<p class="text-sm text-blue-100">Get preliminary diagnosis and treatment recommendations</p>
+</div>
+<div class="bg-white/10 rounded-xl p-4">
+<div class="flex items-center gap-2 mb-2">
+<i class="fa-solid fa-clock text-yellow-300"></i>
+<span class="font-bold">24/7 Assistance</span>
+</div>
+<p class="text-sm text-blue-100">AI chatbot available round the clock for medical queries</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Live OPD Info-->
+<div class="max-w-3xl mx-auto mb-8">
+<div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20">
+<div class="flex items-center justify-center gap-2 text-white">
+<i class="fa-solid fa-circle-info text-blue-300"></i>
+<p class="text-sm font-medium">Live OPD data updated by hospital staff in real time</p>
+</div>
+</div>
+</div>
+
+<!-- Search Bar-->
+<div class="max-w-3xl mx-auto mb-8">
+<div class="glass rounded-3xl p-3 flex items-center gap-3 shadow-2xl">
+<i class="fa-solid fa-search text-slate-400 ml-4 text-xl"></i>
+<input type="text" id="search-input" placeholder="Search hospitals, departments, or ask AI..." class="flex-1 px-4 py-4 bg-transparent outline-none text-slate-700 text-lg">
+<button onclick="searchHospitals()" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl">Search</button>
+<button onclick="openAIChat()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition">
+<i class="fa-solid fa-robot mr-2"></i>Ask AI
+</button>
+</div>
+</div>
+</div>
+
+<!-- Why Use Live OPD Queue-->
+<div class="max-w-4xl mx-auto mb-12">
+<div class="glass rounded-2xl p-6">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl flex-shrink-0">
+<i class="fa-solid fa-clock"></i>
+</div>
+<div class="flex-1">
+<h3 class="text-xl font-bold text-slate-900 mb-3">Why Use CareBridge?</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex items-start gap-2">
+<i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+<div>
+<div class="font-bold text-slate-900">Avoid Overcrowding</div>
+<div class="text-sm text-slate-600">Visit only when needed</div>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+<div>
+<div class="font-bold text-slate-900">AI-Powered Diagnosis</div>
+<div class="text-sm text-slate-600">Instant medical assistance</div>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+<div>
+<div class="font-bold text-slate-900">Real-Time Updates</div>
+<div class="text-sm text-slate-600">Live queue & bed status</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Quick Services Grid -->
+<div class="max-w-6xl mx-auto mb-12">
+<h2 class="text-3xl font-black text-white mb-6 text-center">Our AI-Powered Services</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div onclick="showSection('hospitals')" class="service-card">
+<div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-hospital"></i>
+</div>
+<h3 class="text-lg font-bold text-center mb-2">Hospitals</h3>
+<p class="text-sm text-gray-600 text-center">Live OPD Queue Status</p>
+</div>
+<div onclick="showSection('diagnostics')" class="service-card">
+<div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-microscope"></i>
+</div>
+<h3 class="text-lg font-bold text-center mb-2">Diagnostics</h3>
+<p class="text-sm text-gray-600 text-center">AI Slot Booking</p>
+</div>
+<div onclick="showSection('beds')" class="service-card">
+<div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-bed"></i>
+</div>
+<h3 class="text-lg font-bold text-center mb-2">Bed Availability</h3>
+<p class="text-sm text-gray-600 text-center">ICU/Ward Status</p>
+</div>
+<div onclick="showSection('ambulance')" class="service-card">
+<div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-truck-medical"></i>
+</div>
+<h3 class="text-lg font-bold text-center mb-2">Ambulance</h3>
+<p class="text-sm text-gray-600 text-center">AI Emergency Routing</p>
+</div>
+</div>
+</div>
+
+<!-- Hospital List-->
+<div class="max-w-5xl mx-auto mb-12">
+<div class="glass rounded-3xl overflow-hidden">
+<div class="bg-gradient-to-r from-blue-600 to-green-600 p-6 text-white">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-black">Live OPD Queue Status</h2>
+<p class="text-blue-100 text-sm">Real-time updates from participating hospitals under CareBridge (Pilot Mode)</p>
+</div>
+<div class="live-indicator">
+<span class="live-dot"></span>
+LIVE
+</div>
+</div>
+</div>
+<div class="p-6 bg-white">
+<div id="hospital-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Hospitals will be loaded here-->
+</div>
+</div>
+</div>
+</div>
+
+<!-- Future Features (Now Available) -->
+<div class="max-w-5xl mx-auto">
+<div class="glass rounded-3xl p-8">
+<div class="text-center mb-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-bold mb-4">
+<i class="fa-solid fa-check-circle"></i>
+Now Available
+</div>
+<h2 class="text-3xl font-black text-slate-900 mb-2">Advanced Healthcare Features</h2>
+<p class="text-slate-600">AI-powered tools for better healthcare access</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl mb-4">
+<i class="fa-solid fa-microscope"></i>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">Diagnostic Slot Visibility</h3>
+<p class="text-slate-600 text-sm mb-3">View scan availability & waiting times with AI recommendations</p>
+<span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">Available Now</span>
+</div>
+<div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-6 border-2 border-green-200">
+<div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 text-2xl mb-4">
+<i class="fa-solid fa-bed"></i>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">Bed Availability</h3>
+<p class="text-slate-600 text-sm mb-3">ICU/ward visibility with real-time status updates</p>
+<span class="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Available Now</span>
+</div>
+<div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl p-6 border-2 border-red-200">
+<div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center text-red-600 text-2xl mb-4">
+<i class="fa-solid fa-truck-medical"></i>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-2">Ambulance Coordination</h3>
+<p class="text-slate-600 text-sm mb-3">AI-powered hospital emergency routing & tracking</p>
+<span class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Available Now</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Hospitals Section -->
+<section id="hospitals" class="section public-bg">
+<div class="max-w-7xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<h2 class="text-4xl font-black text-white mb-8">All Hospitals</h2>
+<div id="hospital-list-page" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Hospitals loaded here -->
+</div>
+</div>
+</section>
+
+<!-- Hospital Details Flow -->
+<section id="hospital-options" class="section public-bg">
+<div class="max-w-5xl mx-auto px-4 py-16">
+<button onclick="showSection('hospitals')" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Hospitals
+</button>
+<div class="glass rounded-3xl p-8">
+<h2 class="text-3xl font-black text-slate-900 mb-2" id="selected-hospital-name">Hospital</h2>
+<p class="text-slate-600 mb-8">Choose what you want to do with this hospital.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<button onclick="goToDepartmentSelection('queue')" class="glass-card rounded-2xl p-6 text-left hover-card">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl mb-4">
+<i class="fa-solid fa-clock"></i>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-1">Live Queue</h3>
+<p class="text-slate-600 text-sm">Check tokens, average wait, and current patient flow.</p>
+</button>
+<button onclick="goToDepartmentSelection('booking')" class="glass-card rounded-2xl p-6 text-left hover-card">
+<div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 text-2xl mb-4">
+<i class="fa-solid fa-calendar-check"></i>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-1">Book Appointment</h3>
+<p class="text-slate-600 text-sm">Submit booking request for hospital approval.</p>
+</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="department-selection" class="section public-bg">
+<div class="max-w-6xl mx-auto px-4 py-16">
+<button onclick="showSection('hospital-options')" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back
+</button>
+<div class="flex flex-wrap items-center justify-between mb-4 gap-4">
+<div>
+<h2 class="text-3xl font-black text-white mb-1" id="dept-hospital-name">Hospital</h2>
+<p class="text-blue-100" id="dept-action-text">Select Department</p>
+</div>
+<div class="text-sm text-blue-100" id="last-updated">Last updated: Just now</div>
+</div>
+<div id="department-list-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+</div>
+</section>
+
+<section id="queue-display" class="section public-bg">
+<div class="max-w-6xl mx-auto px-4 py-16">
+<button onclick="goToDepartmentSelection('queue')" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Departments
+</button>
+<div class="glass rounded-3xl p-8 mb-6">
+<div class="flex flex-wrap justify-between gap-4 items-start">
+<div>
+<h2 class="text-3xl font-black text-slate-900" id="queue-hospital-name">Hospital</h2>
+<p class="text-slate-600"><span id="queue-dept-name">Department</span> Live Queue</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-500">Updated <span id="queue-last-updated">Just now</span></p>
+<p class="text-sm text-slate-600 mt-1"><i class="fa-solid fa-user-doctor mr-1"></i><span class="status-dot" id="doctor-status-dot"></span> <span id="doctor-status-text">Available</span></p>
+<p class="text-xs text-slate-500" id="doctor-last-update">Updated: Just now</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+<div class="bg-blue-50 rounded-xl p-4">
+<div class="text-xs uppercase font-bold text-slate-500">Current Token</div>
+<div class="text-3xl font-black text-blue-600" id="current-token">--</div>
+<div class="text-sm text-slate-600" id="current-patient-name"></div>
+</div>
+<div class="bg-purple-50 rounded-xl p-4">
+<div class="text-xs uppercase font-bold text-slate-500">Average Wait</div>
+<div class="text-3xl font-black text-purple-600" id="wait-time">--</div>
+</div>
+<div class="bg-green-50 rounded-xl p-4">
+<div class="text-xs uppercase font-bold text-slate-500">Queue Policy</div>
+<div class="text-sm text-slate-700 mt-1">Emergency cases prioritized automatically</div>
+</div>
+</div>
+</div>
+<div class="glass rounded-3xl p-8">
+<h3 class="text-xl font-bold text-slate-900 mb-4">Token Queue</h3>
+<div id="queue-list"></div>
+</div>
+</div>
+</section>
+
+<section id="booking-form" class="section public-bg">
+<div class="max-w-4xl mx-auto px-4 py-16">
+<button onclick="goToDepartmentSelection('booking')" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Departments
+</button>
+<div class="glass rounded-3xl p-8">
+<h2 class="text-3xl font-black text-slate-900 mb-2">Book Appointment</h2>
+<p class="text-slate-600 mb-6">Hospital will review and approve your appointment.</p>
+<form onsubmit="submitBooking(event)" class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Hospital*</label>
+<select id="booking-hospital" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500"></select>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Department*</label>
+<input type="text" id="booking-department" readonly required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl bg-slate-50 outline-none">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Patient Name*</label>
+<input type="text" id="patient-name" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Age*</label>
+<input type="number" id="patient-age" min="1" max="120" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Phone*</label>
+<input type="tel" id="patient-phone" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Visit Type*</label>
+<select id="booking-type" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+<option value="Appointment">Appointment</option>
+<option value="Walk-in">Walk-in</option>
+<option value="Emergency">Emergency</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Symptoms / Reason</label>
+<textarea id="patient-symptoms" rows="3" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500" placeholder="Enter reason for consultation..."></textarea>
+</div>
+<button type="submit" class="w-full btn-primary text-white py-3 rounded-xl font-bold text-lg">
+<i class="fa-solid fa-paper-plane mr-2"></i>Submit for Approval
+</button>
+</form>
+</div>
+</div>
+</section>
+
+<section id="booking-success" class="section public-bg">
+<div class="max-w-3xl mx-auto px-4 py-16">
+<div class="glass rounded-3xl p-8 text-center">
+<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-4xl mx-auto mb-4">
+<i class="fa-solid fa-check"></i>
+</div>
+<h2 class="text-3xl font-black text-slate-900 mb-2">Appointment Submitted</h2>
+<p class="text-slate-600 mb-6">Your request is now waiting for hospital approval.</p>
+<div class="bg-blue-50 rounded-xl p-4 text-left mb-6">
+<p class="text-sm text-slate-600">Token</p>
+<p class="text-3xl font-black text-blue-700" id="success-token">000</p>
+<p class="text-sm text-slate-600 mt-2">Hospital: <span class="font-bold text-slate-900" id="success-hospital">-</span></p>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-center">
+<button onclick="showSection('hospitals')" class="px-5 py-3 rounded-xl bg-blue-600 text-white font-bold">Book Another</button>
+<button onclick="showSection('home')" class="px-5 py-3 rounded-xl bg-slate-200 text-slate-800 font-bold">Back to Home</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Diagnostics Section with AI -->
+<section id="diagnostics" class="section public-bg">
+<div class="max-w-7xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<h2 class="text-4xl font-black text-white mb-4">AI-Powered Diagnostic Services</h2>
+<p class="text-blue-100 text-xl mb-8">Book MRI, CT Scan, X-Ray & More - AI recommends best slots!</p>
+
+<!-- AI Symptom Checker -->
+<div class="glass diagnostic-panel rounded-3xl p-8 mb-8">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 text-2xl">
+<i class="fa-solid fa-robot"></i>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-slate-900">AI Diagnostic Assistant</h3>
+<p class="text-slate-600">Describe your symptoms or upload prescription for AI analysis</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<textarea id="ai-symptoms" placeholder="Describe your symptoms (e.g., 'I have severe headache and fever for 2 days')..." rows="4" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-purple-500"></textarea>
+<button onclick="analyzeSymptoms()" class="ai-cta-btn mt-4 w-full text-white py-3 rounded-xl font-bold">
+<i class="fa-solid fa-microchip mr-2"></i>Analyze with AI
+</button>
+</div>
+<div>
+<div class="upload-area" onclick="document.getElementById('prescription-upload').click()">
+<i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-4"></i>
+<p class="text-gray-600 font-semibold">Upload Prescription</p>
+<p class="text-sm text-gray-500 mt-2">Click to upload or drag & drop (JPG, PNG, PDF)</p>
+<input type="file" id="prescription-upload" class="hidden" accept="image/*,.pdf" onchange="handlePrescriptionUpload(event)">
+</div>
+<button id="analyze-prescription-btn" onclick="analyzePrescriptionWithAI()" class="hidden ai-cta-btn mt-4 w-full text-white py-3 rounded-xl font-bold">
+<i class="fa-solid fa-file-waveform mr-2"></i>Analyze Prescription with AI
+</button>
+<p id="prescription-file-name" class="hidden mt-3 text-sm text-slate-600"></p>
+</div>
+</div>
+<div id="ai-diagnosis-result" class="hidden diagnostic-result-card mt-6 rounded-xl p-6">
+<!-- AI diagnosis results will appear here -->
+</div>
+</div>
+
+<!-- Diagnostic Services -->
+<div class="mb-8">
+<h3 class="text-2xl font-bold text-white mb-6">Available Diagnostic Services</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="diagnostic-services">
+<!-- Diagnostic services loaded here -->
+</div>
+</div>
+
+<!-- Diagnostic Booking -->
+<div id="diagnostic-booking" class="hidden glass rounded-3xl p-8">
+<button onclick="closeDiagnosticBooking()" class="mb-6 text-slate-600 hover:text-slate-900 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back
+</button>
+<h3 class="text-2xl font-bold text-slate-900 mb-6">Book <span id="booking-diagnostic-name"></span></h3>
+<form onsubmit="submitDiagnosticBooking(event)" class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Patient Name*</label>
+<input type="text" id="diagnostic-patient-name" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Phone*</label>
+<input type="tel" id="diagnostic-patient-phone" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Select Hospital*</label>
+<select id="diagnostic-hospital" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+<option value="">Choose Hospital</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Preferred Date*</label>
+<input type="date" id="diagnostic-date" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Available Time Slots</label>
+<div class="grid grid-cols-3 gap-3" id="time-slots">
+<!-- Time slots will be loaded here -->
+</div>
+</div>
+<button type="submit" class="w-full btn-primary text-white py-3 rounded-xl font-bold text-lg">
+<i class="fa-solid fa-paper-plane mr-2"></i>Book Slot
+</button>
+</form>
+</div>
+</div>
+</section>
+
+<!-- Bed Availability Section -->
+<section id="beds" class="section public-bg">
+<div class="max-w-7xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<h2 class="text-4xl font-black text-white mb-4">Real-Time Bed Availability</h2>
+<p class="text-blue-100 text-xl mb-8">Check ICU, Ward & Emergency bed status across hospitals</p>
+
+<!-- Hospital Bed Status -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" id="bed-availability-list">
+<!-- Bed availability cards loaded here -->
+</div>
+
+<!-- Bed Request Form -->
+<div class="glass rounded-3xl p-8">
+<h3 class="text-2xl font-bold text-slate-900 mb-6">Request Bed Booking</h3>
+<form onsubmit="requestBed(event)" class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Patient Name*</label>
+<input type="text" id="bed-patient-name" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Phone*</label>
+<input type="tel" id="bed-patient-phone" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Select Hospital*</label>
+<select id="bed-hospital" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+<option value="">Choose Hospital</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Bed Type*</label>
+<select id="bed-type" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+<option value="ICU">ICU Bed</option>
+<option value="General Ward">General Ward</option>
+<option value="Private Room">Private Room</option>
+<option value="Emergency">Emergency Bed</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Medical Condition</label>
+<textarea id="bed-condition" rows="3" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500" placeholder="Brief description of patient's condition..."></textarea>
+</div>
+<button type="submit" class="w-full btn-primary text-white py-3 rounded-xl font-bold text-lg">
+<i class="fa-solid fa-bed-pulse mr-2"></i>Request Bed
+</button>
+</form>
+</div>
+</div>
+</section>
+
+<!-- Ambulance Section with AI -->
+<section id="ambulance" class="section public-bg">
+<div class="max-w-7xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<h2 class="text-4xl font-black text-white mb-4">AI-Powered Ambulance Service</h2>
+<p class="text-blue-100 text-xl mb-8">24/7 Emergency Response • AI Route Optimization • Real-Time Tracking</p>
+
+<!-- Emergency Contact -->
+<div class="glass rounded-3xl p-8 mb-8 text-center">
+<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center text-red-600 text-5xl mx-auto mb-4 animate-pulse">
+<i class="fa-solid fa-truck-medical"></i>
+</div>
+<h3 class="text-2xl font-bold text-slate-900 mb-2">Emergency Contact</h3>
+<p class="text-slate-600 mb-6">Call now for immediate assistance</p>
+<div class="text-6xl font-black text-red-600 mb-2">108</div>
+<p class="text-slate-600 mb-6">National Emergency Number</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+<div class="bg-blue-50 rounded-xl p-4">
+<div class="text-2xl font-bold text-blue-600 mb-1">5-7 min</div>
+<div class="text-sm text-slate-600">Average Response Time</div>
+</div>
+<div class="bg-green-50 rounded-xl p-4">
+<div class="text-2xl font-bold text-green-600 mb-1">24/7</div>
+<div class="text-sm text-slate-600">Available Round the Clock</div>
+</div>
+</div>
+<button onclick="requestAmbulance()" class="w-full bg-red-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition">
+<i class="fa-solid fa-phone mr-2"></i>Request Ambulance Now
+</button>
+</div>
+
+<!-- AI Emergency Assistant -->
+<div class="glass rounded-3xl p-8 mb-8">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 text-2xl">
+<i class="fa-solid fa-robot"></i>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-slate-900">AI Emergency Assistant</h3>
+<p class="text-slate-600">Describe the emergency for AI-guided assistance</p>
+</div>
+</div>
+<textarea id="emergency-description" placeholder="Describe the emergency (e.g., 'Patient having chest pain', 'Snake bite victim', 'Accident victim with bleeding')..." rows="3" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-purple-500 mb-4"></textarea>
+<button onclick="getEmergencyAdvice()" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">
+<i class="fa-solid fa-microchip mr-2"></i>Get AI Emergency Advice
+</button>
+<div id="emergency-advice" class="hidden mt-6 bg-purple-50 border border-purple-200 rounded-xl p-6">
+<!-- AI emergency advice will appear here -->
+</div>
+</div>
+
+<!-- Ambulance Request Form -->
+<div id="ambulance-form" class="hidden glass rounded-3xl p-8">
+<button onclick="closeAmbulanceForm()" class="mb-6 text-slate-600 hover:text-slate-900 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back
+</button>
+<h3 class="text-2xl font-bold text-slate-900 mb-6">Ambulance Request Details</h3>
+<form onsubmit="submitAmbulanceRequest(event)" class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Patient Name*</label>
+<input type="text" id="ambulance-patient-name" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-red-500">
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Phone*</label>
+<input type="tel" id="ambulance-phone" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-red-500">
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Pickup Location*</label>
+<input type="text" id="ambulance-pickup" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-red-500">
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Destination Hospital</label>
+<select id="ambulance-destination" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-red-500">
+<option value="">Nearest Hospital (AI Recommended)</option>
+<option value="Civil Hospital">Civil Hospital</option>
+<option value="Sacred Heart Hospital">Sacred Heart Hospital</option>
+<option value="City Care Clinic">City Care Clinic</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Emergency Type</label>
+<select id="ambulance-type" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-red-500">
+<option value="Medical Emergency">Medical Emergency</option>
+<option value="Accident">Accident</option>
+<option value="Snake Bite">Snake Bite</option>
+<option value="Cardiac Arrest">Cardiac Arrest</option>
+<option value="Other">Other</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Additional Details</label>
+<textarea id="ambulance-notes" rows="3" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-red-500" placeholder="Describe the situation, symptoms, or any special requirements..."></textarea>
+</div>
+<button type="submit" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition">
+<i class="fa-solid fa-paper-plane mr-2"></i>Request Ambulance
+</button>
+</form>
+</div>
+</div>
+</section>
+
+<!-- Pharmacy Section -->
+<section id="pharmacy" class="section public-bg">
+<div class="max-w-7xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<h2 class="text-4xl font-black text-white mb-4 text-center">Online Pharmacy</h2>
+<p class="text-blue-100 text-xl mb-8 text-center">Upload prescription or enter medicines - Get them prepared by nearby medical shops</p>
+
+<!-- Medical Shops List -->
+<div id="medical-shops" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div onclick="showPharmacyForm('Apollo Pharmacy')" class="glass-card rounded-2xl p-6 hover-card cursor-pointer">
+<div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-store"></i>
+</div>
+<h3 class="text-xl font-bold text-center mb-2">Apollo Pharmacy</h3>
+<p class="text-sm text-gray-600 text-center">0.5 km away • Open Now</p>
+</div>
+<div onclick="showPharmacyForm('MedPlus')" class="glass-card rounded-2xl p-6 hover-card cursor-pointer">
+<div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-store"></i>
+</div>
+<h3 class="text-xl font-bold text-center mb-2">MedPlus</h3>
+<p class="text-sm text-gray-600 text-center">1.2 km away • Open Now</p>
+</div>
+<div onclick="showPharmacyForm('Wellness Forever')" class="glass-card rounded-2xl p-6 hover-card cursor-pointer">
+<div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-3xl mx-auto mb-4">
+<i class="fa-solid fa-store"></i>
+</div>
+<h3 class="text-xl font-bold text-center mb-2">Wellness Forever</h3>
+<p class="text-sm text-gray-600 text-center">2.0 km away • Open Now</p>
+</div>
+</div>
+
+<!-- Pharmacy Form -->
+<div id="pharmacy-form" class="hidden max-w-2xl mx-auto glass rounded-3xl p-8">
+<button onclick="backToPharmacyShops()" class="mb-6 text-slate-600 hover:text-slate-900 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back
+</button>
+<h3 class="text-2xl font-bold text-slate-900 mb-2">Order from <span id="selected-pharmacy" class="text-purple-600"></span></h3>
+<p class="text-slate-600 mb-6">Upload prescription or enter medicines needed</p>
+
+<!-- Tabs -->
+<div class="flex gap-4 mb-6">
+<button onclick="showPrescriptionUpload()" class="flex-1 py-2 px-4 rounded-lg font-bold bg-purple-600 text-white">Upload Prescription</button>
+<button onclick="showMedicineList()" class="flex-1 py-2 px-4 rounded-lg font-bold bg-gray-200 text-gray-700">Enter Medicines</button>
+</div>
+
+<!-- Prescription Upload -->
+<div id="pharmacy-prescription-upload" class="mb-6">
+<div class="upload-area" onclick="document.getElementById('pharmacy-prescription').click()">
+<i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-4"></i>
+<p class="text-gray-600 font-semibold">Click to Upload or Drag & Drop</p>
+<p class="text-sm text-gray-500 mt-2">Supports JPG, PNG, PDF</p>
+<input type="file" id="pharmacy-prescription" class="hidden" accept="image/*,.pdf">
+</div>
+</div>
+
+<!-- Medicine List -->
+<div id="medicine-list" class="hidden mb-6">
+<div class="space-y-3" id="medicine-fields">
+<div class="flex gap-2">
+<input type="text" placeholder="Medicine name" class="flex-1 px-4 py-2 border-2 border-slate-200 rounded-xl">
+<input type="text" placeholder="Quantity" class="w-32 px-4 py-2 border-2 border-slate-200 rounded-xl">
+</div>
+</div>
+<button onclick="addMedicineField()" class="mt-3 text-purple-600 font-bold text-sm">+ Add another medicine</button>
+</div>
+
+<div class="mb-6">
+<label class="block text-sm font-bold text-slate-700 mb-2">Your Name*</label>
+<input type="text" id="pharmacy-customer-name" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-purple-500">
+</div>
+<div class="mb-6">
+<label class="block text-sm font-bold text-slate-700 mb-2">Phone Number*</label>
+<input type="tel" id="pharmacy-customer-phone" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-purple-500">
+</div>
+
+<button onclick="submitPharmacyOrder()" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+<i class="fa-solid fa-paper-plane mr-2"></i>Send to Medical Shop
+</button>
+</div>
+
+<!-- Order Confirmation -->
+<div id="pharmacy-confirmation" class="hidden max-w-2xl mx-auto glass rounded-3xl p-8 text-center">
+<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-4xl mx-auto mb-4">
+<i class="fa-solid fa-check"></i>
+</div>
+<h3 class="text-2xl font-bold text-slate-900 mb-2">Order Sent Successfully!</h3>
+<p class="text-slate-600 mb-6">Medical shop is preparing your order. You'll receive a confirmation message shortly.</p>
+<div class="bg-purple-50 rounded-xl p-6 mb-6">
+<div class="text-sm text-slate-600 mb-1">Order Number</div>
+<div class="text-3xl font-black text-purple-600" id="pharmacy-order-number">PH-8842</div>
+</div>
+<button onclick="backToPharmacyShops()" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold">
+Back to Shops
+</button>
+</div>
+</div>
+</section>
+
+<!-- About Section-->
+<section id="about" class="section public-bg">
+<div class="max-w-4xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold">← Back to Home</button>
+<div class="glass rounded-3xl p-8">
+<div class="text-center mb-8">
+<h1 class="text-4xl font-black text-slate-900 mb-6">About CareBridge</h1>
+</div>
+<div class="prose prose-lg max-w-none">
+<p class="text-lg text-slate-700 mb-6">
+CareBridge is an <strong class="text-slate-900">AI-powered healthcare coordination platform</strong> designed to solve critical healthcare challenges: OPD overcrowding, diagnostic delays, bed availability, and emergency response.
+</p>
+<p class="text-lg text-slate-700 mb-6">
+We integrate advanced AI chatbots for symptom checking, prescription analysis, and emergency guidance, while providing real-time visibility into hospital queues, diagnostic slots, ICU beds, and ambulance tracking - all in one comprehensive platform.
+</p>
+<div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-6">
+<p class="text-slate-700">
+Our AI-powered features include symptom analysis, prescription scanning, emergency routing, and 24/7 medical assistance - making healthcare accessible, efficient, and intelligent for everyone.
+</p>
+</div>
+<div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-6 mt-8">
+<h3 class="text-xl font-bold text-slate-900 mb-4">Built By</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-white rounded-xl p-4 border-2 border-blue-200">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+<i class="fa-solid fa-lightbulb"></i>
+</div>
+<div>
+<div class="font-bold text-slate-900">Saiyam Kapur</div>
+<div class="text-sm text-slate-600">Product & Concept</div>
+</div>
+</div>
+<p class="text-sm text-gray-600">Visionary behind CareBridge's comprehensive AI-powered healthcare ecosystem design.</p>
+</div>
+<div class="bg-white rounded-xl p-4 border-2 border-green-200">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+<i class="fa-solid fa-code"></i>
+</div>
+<div>
+<div class="font-bold text-slate-900">Saiyam Kapur</div>
+<div class="text-sm text-slate-600">Technical Developer</div>
+</div>
+</div>
+<p class="text-sm text-gray-600">Technical architect and developer, building the complete AI-integrated platform.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Emergency Section -->
+<section id="emergency" class="section public-bg">
+<div class="max-w-4xl mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<div class="glass rounded-3xl p-12 text-center">
+<div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center text-red-600 text-5xl mx-auto mb-6 animate-pulse">
+<i class="fa-solid fa-truck-medical"></i>
+</div>
+<h2 class="text-4xl font-black text-slate-900 mb-4">Emergency Services</h2>
+<p class="text-xl text-slate-600 mb-8">For medical emergencies, please call immediately.</p>
+<a href="tel:108" class="inline-block bg-red-600 text-white text-2xl font-bold px-12 py-4 rounded-full hover:bg-red-700 transition shadow-lg">
+<i class="fa-solid fa-phone mr-3"></i>Call 108
+</a>
+</div>
+</div>
+</section>
+
+<!-- Portal Section -->
+<section id="portal" class="section public-bg">
+<div class="max-w-md mx-auto px-4 py-16">
+<button onclick="goHome()" class="mb-6 text-white hover:text-blue-200 font-bold flex items-center gap-2">
+<i class="fa-solid fa-arrow-left"></i> Back to Home
+</button>
+<div class="glass rounded-3xl p-8">
+<h2 class="text-3xl font-black text-slate-900 text-center mb-6">Portal Login</h2>
+<form onsubmit="handlePortalLogin(event)" class="space-y-6">
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Email</label>
+<input type="email" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
+<input type="password" required class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500">
+</div>
+<button type="submit" class="w-full btn-primary text-white py-3 rounded-xl font-bold">Login</button>
+</form>
+</div>
+</div>
+</section>
+</div>
+
+<!--===== HOSPITAL COORDINATOR DASHBOARD=====-->
+<div id="coordinator-dashboard" class="dashboard-bg hidden min-h-screen">
+<div class="max-w-7xl mx-auto px-4 py-8">
+<!-- Coordinator Dashboard Header-->
+<div class="dashboard-card rounded-2xl p-6 mb-8">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-bold text-white mb-1">Coordinator Dashboard</h2>
+<p class="text-slate-400" id="coordinator-info">Coordinator: Civil Hospital - OPD Desk</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="live-indicator">
+<span class="live-dot"></span>
+Live
+</span>
+<span class="text-slate-400" id="current-time">11:03 AM</span>
+</div>
+</div>
+</div>
+<!-- Today's OPD Status-->
+<div class="dashboard-card rounded-2xl p-6 mb-8">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold text-white">Today's OPD Status</h3>
+<span class="text-slate-400 text-sm">Updated: Just now</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="stat-card">
+<div class="text-3xl font-black text-blue-400 mb-1" id="active-depts">3</div>
+<div class="text-sm text-slate-400">Active Departments</div>
+</div>
+<div class="stat-card">
+<div class="text-3xl font-black text-orange-400 mb-1" id="patients-waiting">0</div>
+<div class="text-sm text-slate-400">Patients Waiting</div>
+</div>
+<div class="stat-card">
+<div class="text-3xl font-black text-yellow-400 mb-1" id="pending-approvals">0</div>
+<div class="text-sm text-slate-400">Pending Approvals</div>
+</div>
+<div class="stat-card">
+<div class="text-3xl font-black text-red-400 mb-1" id="emergency-cases">0</div>
+<div class="text-sm text-slate-400">Emergency Cases</div>
+</div>
+</div>
+</div>
+<!-- Department-wise Queue Management & Pending Approvals-->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<!-- Department Queue Management-->
+<div class="lg:col-span-2">
+<div class="dashboard-card rounded-2xl p-6">
+<h3 class="text-xl font-bold text-white mb-6">Department-wise Queue Management</h3>
+<div id="department-list" class="space-y-6">
+<!-- Departments will be loaded here-->
+</div>
+</div>
+</div>
+<!-- Pending Token Approvals-->
+<div>
+<div class="dashboard-card rounded-2xl p-6">
+<h3 class="text-xl font-bold text-white mb-6">Pending Token Approvals</h3>
+<div id="pending-list" class="space-y-4">
+<p class="text-slate-400 text-center py-8">No pending approvals</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Queue Management Notice-->
+<div class="dashboard-card rounded-2xl p-6">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 flex-shrink-0">
+<i class="fa-solid fa-circle-info"></i>
+</div>
+<div>
+<h4 class="font-bold text-white mb-2">Queue Management Notice</h4>
+<p class="text-slate-400 text-sm">Queue order may change based on emergency cases and doctor discretion. Emergency cases receive highest priority.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- FOOTER-->
+<footer class="bg-slate-900 text-white py-8 mt-12">
+<div class="max-w-7xl mx-auto px-4 text-center">
+<p class="text-slate-400 text-sm">
+<i class="fa-solid fa-copyright mr-2"></i>
+2026 CareBridge. All rights reserved.
+</p>
+<p class="text-slate-500 text-xs mt-2">
+Built by Saiyam Kapur — Student Innovator
+</p>
+</div>
+</footer>
+
+<!-- AI CHATBOT-->
+<div class="chatbot-container">
+<button class="chatbot-button" onclick="toggleChatbot()">
+<i class="fa-solid fa-comments"></i>
+</button>
+<div class="chatbot-window" id="chatbot">
+<div class="chatbot-header">
+<div>
+<h3 class="font-bold">CareBridge AI Assistant</h3>
+<p class="text-xs">Always here to help</p>
+</div>
+<button onclick="toggleChatbot()">✕</button>
+</div>
+<div class="chatbot-messages" id="chat-messages">
+<!-- Messages loaded here-->
+</div>
+<div class="chatbot-input">
+<input type="text" id="chat-input" placeholder="Type..." onkeypress="handleChatEnter(event)">
+<button onclick="sendChat()">➤</button>
+</div>
+</div>
+</div>
+
+<!-- LOGIN MODAL-->
+<div id="login-modal" class="fixed inset-0 z-[100] hidden">
+<div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeLoginModal()"></div>
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
+<div class="glass rounded-3xl p-8">
+<div class="text-center mb-6">
+<div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4">
+<i class="fa-solid fa-plus"></i>
+</div>
+<h2 class="text-2xl font-bold text-slate-900">Portal Login</h2>
+<p class="text-slate-500 text-sm mt-1">Access your dashboard</p>
+</div>
+<form onsubmit="handleLogin(event)" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase mb-1">Login ID</label>
+<input type="text" id="login-id" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500" required>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password</label>
+<input type="password" id="login-pass" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl outline-none focus:border-blue-500" required>
+</div>
+<div class="p-3 bg-blue-50 border border-blue-200 rounded-xl">
+<p class="text-xs text-blue-800 font-bold mb-2"><i class="fa-solid fa-info-circle mr-1"></i>Demo Credentials:</p>
+<div class="text-[10px] text-slate-600 space-y-1">
+<div><strong>Civil Hospital:</strong> civil / hospital123</div>
+<div><strong>Sacred Heart:</strong> sacredheart / hospital123</div>
+<div><strong>Admin:</strong> admin / admin123</div>
+</div>
+</div>
+<button type="submit" class="w-full btn-primary text-white py-3.5 rounded-xl font-bold shadow-lg">Sign In</button>
+</form>
+</div>
+</div>
+</div>
+
+<script>
+//==================== DATA====================
+const hospitals=[
+{ id: 1, name:"Civil Hospital", loginId:"civil", password:"hospital123", departments:["General Medicine","Pediatrics","Gynecology"]},
+{ id: 2, name:"Sacred Heart Hospital", loginId:"sacredheart", password:"hospital123", departments:["General Medicine","Cardiology","Orthopedics"]},
+{ id: 3, name:"City Care Clinic", loginId:"citycare", password:"hospital123", departments:["General Medicine","ENT","Dermatology"]}
+];
+let bookings=[];
+let diagnosticBookings=[];
+let bedRequests=[];
+let ambulanceRequests=[];
+let pharmacyOrders=[];
+let currentUser= null;
+let selectedHospital= null;
+let selectedDepartment= null;
+let currentAction= null;
+let nextToken= 1;
+let nextDiagnosticToken= 1;
+let nextPharmacyOrder= 1;
+let isSearchMode= false;
+let searchResults=[];
+let lastUpdateTime= new Date();
+let doctorStatuses={};
+let chatStep= 0;
+let chatData={};
+let notificationQueue=[];
+let selectedDiagnosticService='';
+let selectedPharmacyShop='';
+let selectedBedType='';
+let uploadedPrescriptionFile= null;
+const API_BASE_URL= window.location.origin.includes('localhost') ? window.location.origin : 'http://localhost:3000';
+
+// Initialize doctor statuses
+hospitals.forEach(h=>{
+h.departments.forEach(dept=>{
+doctorStatuses[`${h.id}-${dept}`]={
+status: 'available',
+lastUpdate: new Date()
+};
+});
+});
+
+// Initialize sample data
+function initSampleData(){
+bookings=[
+{ id: 1, hospitalId: 1, token: 1, name:"Rajesh Kumar", age: 45, phone: "9876543210", department:"General Medicine", type:"Walk-in", symptoms:"Fever",
+priority:"Normal", status:"Approved", queuePosition: 1, bookingTime: new Date().toLocaleString(), consultingTime: null, completedTime: null},
+{ id: 2, hospitalId: 1, token: 2, name:"Priya Sharma", age: 32, phone: "9876543211", department:"Pediatrics", type:"Appointment", symptoms:"Cold",
+priority:"Normal", status:"Pending", queuePosition: 0, bookingTime: new Date().toLocaleString(), consultingTime: null, completedTime: null},
+{ id: 3, hospitalId: 2, token: 3, name:"Amit Singh", age: 28, phone:"9876543212", department:"Cardiology", type:"Emergency", symptoms:"Chest pain", priority:
+"Emergency", status:"Approved", queuePosition: 1, bookingTime: new Date().toLocaleString(), consultingTime: null, completedTime: null}
+];
+}
+
+//==================== INIT====================
+function init(){
+initSampleData();
+renderHospitals();
+renderDiagnosticServices();
+renderBedAvailability();
+updateTime();
+setInterval(updateTime, 60000);
+setInterval(checkNotifications, 60000);
+setTimeout(()=>{
+addBotMessage("Hello! I'm your CareBridge AI Assistant. I can help you with:");
+addBotMessage("• Booking appointments");
+addBotMessage("• Checking symptoms");
+addBotMessage("• Finding hospitals & beds");
+addBotMessage("• Emergency assistance");
+showQuickReplies(["Book appointment","Check symptoms","Find hospital","Emergency help"]);
+}, 500);
+}
+
+//==================== NAVIGATION====================
+function showSection(sectionId){
+document.querySelectorAll('.section').forEach(s=> s.classList.remove('active'));
+const targetSection= document.getElementById(sectionId);
+if(targetSection){
+targetSection.classList.add('active');
+window.scrollTo(0, 0);
+}
+}
+
+function goHome(){
+showSection('home');
+selectedHospital= null;
+selectedDepartment= null;
+currentAction= null;
+}
+
+//==================== TIME & SYNC====================
+function updateTime(){
+const now= new Date();
+const timeStr= now.toLocaleTimeString('en-US',{ hour: '2-digit', minute: '2-digit'});
+document.getElementById('current-time').innerText= timeStr;
+}
+
+function updateLastUpdateTime(){
+lastUpdateTime= new Date();
+const now= new Date();
+const diff= Math.floor((now- lastUpdateTime)/ 60000);
+const timeAgo= diff< 1? 'Just now' :`${diff} min ago`;
+document.getElementById('last-updated').innerText=`Last updated: ${timeAgo}`;
+}
+
+function updateLastSync(){
+const now= new Date();
+document.getElementById('last-sync-hospital').innerText=`Last sync: Just now`;
+alert('Data updated successfully!');
+}
+
+//==================== NOTIFICATION SYSTEM====================
+function checkNotifications(){
+const now= new Date();
+bookings.forEach(booking=>{
+if(booking.status=== 'Approved' && booking.queuePosition> 0){
+const avgConsultMins= 15;
+const estimatedMinutes= booking.queuePosition*avgConsultMins;
+if(estimatedMinutes<= 15&&!booking.notified15){
+showNotification(`Token ${String(booking.token).padStart(3, '0')} - Expected within 15 minutes. Please reach hospital.`, 'warning');
+sendQueueSMSReminder(booking, estimatedMinutes, 'Reminder: your turn is approaching.');
+booking.notified15= true;
+}
+if(estimatedMinutes<= 5&&!booking.notified5){
+showNotification(`Token ${String(booking.token).padStart(3, '0')} - Please be ready, expected in around 5 minutes.`, 'info');
+sendQueueSMSReminder(booking, estimatedMinutes, 'Final reminder: be present at OPD counter.');
+booking.notified5= true;
+}
+}
+});
+}
+
+function sendQueueSMSReminder(booking, etaMinutes, message){
+const hospital= hospitals.find(h=> h.id=== booking.hospitalId);
+const tokenText= String(booking.token).padStart(3, '0');
+const smsText= `SMS to ${booking.phone}: Token ${tokenText}, ${hospital? hospital.name: 'Hospital'}, ETA ${Math.max(etaMinutes, 0)} min. ${message}`;
+console.log(smsText);
+showNotification(smsText, 'info');
+}
+
+function showNotification(message, type= 'info'){
+const toast= document.createElement('div');
+toast.className= 'notification-toast';
+toast.innerHTML=`
+<div class="flex items-start gap-3">
+<i class="fa-solid fa-bell text-${type=== 'warning' ? 'yellow' : 'green'}-600 text-xl"></i>
+<div>
+<div class="font-bold text-slate-900 mb-1">Notification</div>
+<div class="text-sm text-slate-600">${message}</div>
+</div>
+</div>
+`;
+document.body.appendChild(toast);
+setTimeout(()=>{
+toast.remove();
+}, 5000);
+}
+
+//==================== PUBLIC FUNCTIONS ====================
+function renderHospitals(){
+const list= document.getElementById('hospital-list');
+const listPage= document.getElementById('hospital-list-page');
+const html= hospitals.map(h=>{
+const approvedBookings= bookings.filter(b=> b.hospitalId=== h.id&& b.status==='Approved');
+const pendingApprovals= bookings.filter(b=> b.hospitalId=== h.id&& b.status==='Pending');
+const avgWait= approvedBookings.length*15;
+return`
+<div class="glass-card rounded-2xl p-6 hover-card">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="text-lg font-bold text-slate-900">${h.name}</h3>
+<p class="text-sm text-slate-500">Hospital</p>
+</div>
+<div class="live-indicator">
+<span class="live-dot"></span>
+LIVE
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-blue-50 rounded-xl p-4 text-center">
+<div class="text-2xl font-black text-blue-600">${approvedBookings.length}</div>
+<div class="text-xs text-slate-600">In Queue</div>
+</div>
+<div class="bg-purple-50 rounded-xl p-4 text-center">
+<div class="text-2xl font-black text-purple-600">${avgWait}m</div>
+<div class="text-xs text-slate-600">Avg Wait</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-sm">
+<span class="text-slate-600">Pending Approval:</span>
+<span class="font-bold text-orange-600">${pendingApprovals.length}</span>
+</div>
+<button onclick="selectHospital(${h.id})" class="w-full btn-primary text-white py-2 rounded-lg font-bold text-sm">View Details</button>
+</div>
+</div>
+`;
+}).join('');
+if(list) list.innerHTML= html;
+if(listPage) listPage.innerHTML= html;
+}
+
+function selectHospital(id){
+selectedHospital= hospitals.find(h=> h.id=== id);
+if(!selectedHospital){
+showNotification('Unable to open hospital details right now.', 'error');
+return;
+}
+document.getElementById('selected-hospital-name').innerText= selectedHospital.name;
+showSection('hospital-options');
+}
+
+function goToDepartmentSelection(action){
+currentAction= action;
+document.getElementById('dept-hospital-name').innerText= selectedHospital.name;
+document.getElementById('dept-action-text').innerText= action==='queue' ? 'Select Department for Live Queue' : 'Select Department for Booking';
+updateLastUpdateTime();
+const list= document.getElementById('department-list-grid');
+list.innerHTML= selectedHospital.departments.map(dept=>{
+const doctorStatus= doctorStatuses[`${selectedHospital.id}-${dept}`];
+const statusClass= doctorStatus.status==='available' ?'status-available': doctorStatus.status=== 'break' ? 'status-break' : doctorStatus.status=== 'delayed' ? 'status-delayed' : 'status-not-available';
+const statusText= doctorStatus.status==='available' ? 'Available' : doctorStatus.status=== 'break' ? 'On Break' : doctorStatus.status=== 'delayed' ? 'Delayed' : 'Not Available';
+return`
+<div class="glass-card rounded-2xl p-6 hover-card cursor-pointer" onclick="selectDepartment('${dept}')">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl">
+<i class="fa-solid fa-stethoscope"></i>
+</div>
+<div class="flex-1">
+<h3 class="text-xl font-bold text-slate-900">${dept}</h3>
+<p class="text-sm text-slate-600">View Live Queue Status</p>
+</div>
+</div>
+<div class="text-right">
+<span class="status-badge ${statusClass}">${statusText}</span>
+<i class="fa-solid fa-arrow-right text-blue-600 mt-2 block"></i>
+</div>
+</div>
+</div>
+`;
+}).join('');
+showSection('department-selection');
+}
+
+function selectDepartment(dept){
+selectedDepartment= dept;
+if(currentAction=== 'queue'){
+showQueueDisplay();
+}else{
+showBookingForm();
+}
+}
+
+function showBookingForm(){
+const hospitalSelect= document.getElementById('booking-hospital');
+hospitalSelect.innerHTML= '<option value="">Choose Hospital</option>';
+hospitals.forEach(h=>{
+const option= document.createElement('option');
+option.value= h.id;
+option.textContent= h.name;
+hospitalSelect.appendChild(option);
+});
+hospitalSelect.value= selectedHospital.id;
+document.getElementById('booking-department').value= selectedDepartment || '';
+showSection('booking-form');
+}
+
+function showQueueDisplay(){
+document.getElementById('queue-hospital-name').innerText= selectedHospital.name;
+document.getElementById('queue-dept-name').innerText= selectedDepartment;
+updateLastUpdateTime();
+updateQueueLastUpdated();
+updateDoctorStatusDisplay();
+const deptBookings= bookings
+.filter(b=> b.hospitalId=== selectedHospital.id&& b.department=== selectedDepartment&& b.status=== 'Approved')
+.sort((a, b)=> a.queuePosition- b.queuePosition);
+const current= deptBookings.find(b=> b.queuePosition=== 1);
+const waitTime= deptBookings.length*15;
+document.getElementById('current-token').innerText= current? String(current.token).padStart(3, '0') : '--';
+document.getElementById('current-patient-name').innerText= current? current.name: '';
+document.getElementById('wait-time').innerText= waitTime> 0? waitTime+ 'm' : '--';
+const queueList= document.getElementById('queue-list');
+if(deptBookings.length=== 0){
+queueList.innerHTML='<p class="text-slate-500 text-center py-4">No patients in queue</p>';
+}else{
+queueList.innerHTML= deptBookings.map((b, index)=>`
+<div class="glass-card rounded-xl p-4 border-2 ${index=== 0? 'border-blue-500' : 'border-slate-200'}">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+${index+ 1}
+</div>
+<div>
+<div class="font-bold">Token ${String(b.token).padStart(3, '0')}</div>
+<div class="text-sm text-slate-500">${b.type}</div>
+</div>
+</div>
+${index=== 0? '<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">Now Consulting</span>' : index=== 1? '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Next</span>' : ''}
+</div>
+</div>
+`).join('');
+}
+showSection('queue-display');
+}
+
+function updateDoctorStatusDisplay(){
+const doctorStatus= doctorStatuses[`${selectedHospital.id}-${selectedDepartment}`];
+const statusDot= document.getElementById('doctor-status-dot');
+const statusText= document.getElementById('doctor-status-text');
+const lastUpdate= document.getElementById('doctor-last-update');
+statusDot.className= 'status-dot';
+if(doctorStatus.status=== 'available'){
+statusDot.classList.add('available');
+statusText.innerText= 'Available';
+statusText.className= 'text-white font-medium text-sm';
+}else if(doctorStatus.status=== 'delayed'){
+statusDot.classList.add('delayed');
+statusText.innerText= 'Delayed';
+statusText.className= 'text-yellow-300 font-medium text-sm';
+}else if(doctorStatus.status=== 'not-available'){
+statusDot.classList.add('not-available');
+statusText.innerText= 'Not Available';
+statusText.className= 'text-red-300 font-medium text-sm';
+}else if(doctorStatus.status=== 'break'){
+statusDot.classList.add('break');
+statusText.innerText= 'On Break';
+statusText.className= 'text-gray-300 font-medium text-sm';
+}
+const now= new Date();
+const diff= Math.floor((now- doctorStatus.lastUpdate)/ 60000);
+const timeAgo= diff< 1? 'Just now' :`${diff} min ago`;
+lastUpdate.innerText=`Updated: ${timeAgo}`;
+}
+
+function updateQueueLastUpdated(){
+const now= new Date();
+const diff= Math.floor((now- lastUpdateTime)/ 60000);
+const timeAgo= diff< 1? 'Just now' :`${diff} min ago`;
+document.getElementById('queue-last-updated').innerText= timeAgo;
+}
+
+function submitBooking(e){
+e.preventDefault();
+const booking={
+id: bookings.length+ 1,
+hospitalId: parseInt(document.getElementById('booking-hospital').value),
+token: nextToken++,
+name: document.getElementById('patient-name').value,
+age: parseInt(document.getElementById('patient-age').value),
+phone: document.getElementById('patient-phone').value,
+department: document.getElementById('booking-department').value,
+type: document.getElementById('booking-type').value,
+symptoms: document.getElementById('patient-symptoms').value,
+status:'Pending',
+queuePosition: 0,
+bookingTime: new Date().toLocaleString(),
+consultingTime: null,
+completedTime: null,
+notified30: false,
+notified10: false
+};
+bookings.push(booking);
+const hospital= hospitals.find(h=> h.id=== booking.hospitalId);
+document.getElementById('success-token').innerText= String(booking.token).padStart(3, '0');
+document.getElementById('success-hospital').innerText= hospital.name;
+sendQueueSMSReminder(booking, 45, 'Booked successfully. Hospital approval pending.');
+showNotification(`Token ${String(booking.token).padStart(3, '0')} submitted for approval!`, 'success');
+showSection('booking-success');
+}
+
+function searchHospitals(){
+const query= document.getElementById('search-input').value.trim().toLowerCase();
+if(!query){
+showAllHospitals();
+return;
+}
+const filtered= hospitals.filter(h=> h.name.toLowerCase().includes(query) || h.departments.some(d=> d.toLowerCase().includes(query)));
+if(filtered.length=== 0){
+alert('No hospitals or departments found');
+showAllHospitals();
+return;
+}
+searchResults= filtered;
+isSearchMode= true;
+document.getElementById('show-all-btn').classList.remove('hidden');
+renderSearchResults();
+}
+
+function renderSearchResults(){
+const list= document.getElementById('hospital-list');
+list.innerHTML= searchResults.map(h=>{
+const approvedBookings= bookings.filter(b=> b.hospitalId=== h.id&& b.status==='Approved');
+const pendingApprovals= bookings.filter(b=> b.hospitalId=== h.id&& b.status==='Pending');
+const avgWait= approvedBookings.length*15;
+return`
+<div class="glass-card rounded-2xl p-6 hover-card">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="text-lg font-bold text-slate-900">${h.name}</h3>
+<p class="text-sm text-slate-500">Hospital</p>
+</div>
+<div class="live-indicator">
+<span class="live-dot"></span>
+LIVE
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-blue-50 rounded-xl p-4 text-center">
+<div class="text-2xl font-black text-blue-600">${approvedBookings.length}</div>
+<div class="text-xs text-slate-600">In Queue</div>
+</div>
+<div class="bg-purple-50 rounded-xl p-4 text-center">
+<div class="text-2xl font-black text-purple-600">${avgWait}m</div>
+<div class="text-xs text-slate-600">Avg Wait</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-sm">
+<span class="text-slate-600">Pending Approval:</span>
+<span class="font-bold text-orange-600">${pendingApprovals.length}</span>
+</div>
+<button onclick="selectHospital(${h.id})" class="w-full btn-primary text-white py-2 rounded-lg font-bold text-sm">View Details</button>
+</div>
+</div>
+`;
+}).join('');
+}
+
+function showAllHospitals(){
+isSearchMode= false;
+searchResults=[];
+document.getElementById('search-input').value= '';
+document.getElementById('show-all-btn').classList.add('hidden');
+renderHospitals();
+}
+
+//==================== NEW: Diagnostic Functions ====================
+function renderDiagnosticServices(){
+const container= document.getElementById('diagnostic-services');
+const services=[
+{ name: 'MRI Scan', icon: 'fa-microscope', price: '₹4,500', duration: '45 mins' },
+{ name: 'CT Scan', icon: 'fa-x-ray', price: '₹2,800', duration: '15 mins' },
+{ name: 'Ultrasound', icon: 'fa-wave-square', price: '₹1,500', duration: '20 mins' },
+{ name: 'X-Ray', icon: 'fa-bone', price: '₹600', duration: '10 mins' },
+{ name: 'Blood Test', icon: 'fa-vial', price: '₹800', duration: '30 mins' },
+{ name: 'ECG', icon: 'fa-heart-pulse', price: '₹500', duration: '15 mins' }
+];
+container.innerHTML= services.map(service=>`
+<div class="slot-card" onclick="openDiagnosticBooking('${service.name}')">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl mb-4">
+<i class="fa-solid ${service.icon}"></i>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-2">${service.name}</h3>
+<p class="text-sm text-slate-600 mb-4">Duration: ${service.duration}</p>
+<div class="flex items-center justify-between">
+<span class="text-lg font-bold text-blue-600">${service.price}</span>
+<span class="text-sm text-blue-600 font-bold">Book Now →</span>
+</div>
+</div>
+`).join('');
+}
+
+function openDiagnosticBooking(serviceName){
+selectedDiagnosticService= serviceName;
+document.getElementById('booking-diagnostic-name').innerText= serviceName;
+document.getElementById('diagnostic-booking').classList.remove('hidden');
+document.getElementById('diagnostic-services').classList.add('hidden');
+
+// Populate hospitals
+const hospitalSelect= document.getElementById('diagnostic-hospital');
+hospitalSelect.innerHTML= '<option value="">Choose Hospital</option>';
+hospitals.forEach(h=>{
+const option= document.createElement('option');
+option.value= h.id;
+option.textContent= h.name;
+hospitalSelect.appendChild(option);
+});
+
+// Generate time slots
+generateTimeSlots();
+}
+
+function generateTimeSlots(){
+const container= document.getElementById('time-slots');
+const times= ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'];
+container.innerHTML= times.map(time=>`
+<button type="button" onclick="selectTimeSlot(this)" class="py-2 px-4 rounded-lg border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+${time}
+</button>
+`).join('');
+}
+
+function selectTimeSlot(btn){
+document.querySelectorAll('#time-slots button').forEach(b=>{
+b.classList.remove('border-blue-500', 'bg-blue-50');
+b.classList.add('border-slate-200');
+});
+btn.classList.remove('border-slate-200');
+btn.classList.add('border-blue-500', 'bg-blue-50');
+}
+
+function closeDiagnosticBooking(){
+document.getElementById('diagnostic-booking').classList.add('hidden');
+document.getElementById('diagnostic-services').classList.remove('hidden');
+}
+
+function submitDiagnosticBooking(e){
+e.preventDefault();
+const booking={
+id: diagnosticBookings.length+ 1,
+token: `D-${String(nextDiagnosticToken++).padStart(3, '0')}`,
+service: selectedDiagnosticService,
+hospital: document.getElementById('diagnostic-hospital').options[document.getElementById('diagnostic-hospital').selectedIndex].text,
+patientName: document.getElementById('diagnostic-patient-name').value,
+phone: document.getElementById('diagnostic-patient-phone').value,
+date: document.getElementById('diagnostic-date').value,
+status: 'Pending',
+bookingTime: new Date().toLocaleString()
+};
+diagnosticBookings.push(booking);
+showNotification(`${selectedDiagnosticService} booking submitted! Token: ${booking.token}`, 'success');
+closeDiagnosticBooking();
+}
+
+//==================== AI Symptom Analysis ====================
+async function analyzeSymptoms(){
+const symptoms= document.getElementById('ai-symptoms').value.trim();
+if(!symptoms){
+alert('Please describe your symptoms');
+return;
+}
+
+const resultDiv= document.getElementById('ai-diagnosis-result');
+resultDiv.classList.remove('hidden');
+resultDiv.innerHTML=`
+<div class="text-slate-700 text-sm flex items-center gap-2">
+<i class="fa-solid fa-spinner fa-spin text-indigo-600"></i>
+Analyzing symptoms with AI...
+</div>
+`;
+
+const systemPrompt= "You are a medical triage assistant for CareBridge. Respond in simple language. Output with headings and bullets: 1) Likely causes (2-4), 2) What to do now, 3) What to avoid, 4) Food guidance, 5) Red flags/when to seek urgent care. Mention this is not a final diagnosis.";
+const aiReply= await getOpenRouterReply(symptoms, systemPrompt);
+
+resultDiv.innerHTML=`
+<div class="flex items-start gap-3 mb-4">
+<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+<i class="fa-solid fa-robot"></i>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900 mb-2">AI Symptom Analysis</h4>
+<p class="text-xs text-slate-500 mb-3">Input: ${escapeHtml(symptoms)}</p>
+<div class="space-y-2 text-sm text-slate-700 leading-6">${escapeHtml(aiReply).replace(/\n/g, '<br>')}</div>
+<p class="mt-4 text-purple-700 font-semibold"><i class="fa-solid fa-circle-info mr-2"></i>AI guidance only. Please consult a doctor for diagnosis and treatment.</p>
+</div>
+</div>
+`;
+}
+
+function handlePrescriptionUpload(event){
+const file= event.target.files[0];
+if(file){
+uploadedPrescriptionFile= file;
+document.getElementById('analyze-prescription-btn').classList.remove('hidden');
+const fileNameLabel= document.getElementById('prescription-file-name');
+fileNameLabel.classList.remove('hidden');
+fileNameLabel.innerText= `Selected file: ${file.name}`;
+showNotification(`Prescription "${file.name}" uploaded. Click "Analyze Prescription with AI".`, 'success');
+}
+}
+
+async function analyzePrescriptionWithAI(){
+if(!uploadedPrescriptionFile){
+alert('Please upload a prescription first.');
+return;
+}
+showNotification('AI is analyzing the prescription and generating patient-friendly guidance...', 'info');
+const resultDiv= document.getElementById('ai-diagnosis-result');
+resultDiv.classList.remove('hidden');
+resultDiv.innerHTML=`
+<div class="text-slate-700 text-sm flex items-center gap-2">
+<i class="fa-solid fa-spinner fa-spin text-indigo-600"></i>
+Reading prescription with backend OCR + AI...
+</div>
+`;
+
+let aiReply= "Unable to analyze right now. Please try again.";
+let extractedText= "";
+try{
+const formData= new FormData();
+formData.append('prescription', uploadedPrescriptionFile);
+const response= await fetch(`${API_BASE_URL}/api/analyze-prescription`, { method: 'POST', body: formData });
+if(response.ok){
+const data= await response.json();
+aiReply= data.analysis || aiReply;
+extractedText= data.extractedText || "";
+}else{
+aiReply= "Backend could not analyze prescription. Please ensure server is running.";
+}
+}catch(error){
+console.error('Prescription analyze error:', error);
+aiReply= "Cannot connect to backend API. Start backend server on localhost:3000.";
+}
+
+resultDiv.innerHTML=`
+<div class="flex items-start gap-3 mb-4">
+<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+<i class="fa-solid fa-file-prescription"></i>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900 mb-2">AI Prescription Analysis (Easy Language)</h4>
+<p class="text-xs text-slate-500 mb-3">File: ${escapeHtml(uploadedPrescriptionFile.name)}</p>
+${extractedText ? `<details class="mb-3 bg-white/70 rounded-lg p-3 border border-indigo-100"><summary class="cursor-pointer text-xs font-bold text-indigo-700">View OCR extracted text</summary><p class="mt-2 text-xs text-slate-600 whitespace-pre-wrap">${escapeHtml(extractedText)}</p></details>` : ''}
+<div class="space-y-2 text-sm text-slate-700 leading-6">${escapeHtml(aiReply).replace(/\n/g, '<br>')}</div>
+<p class="mt-3 text-purple-700 font-semibold"><i class="fa-solid fa-circle-info mr-2"></i>AI output is guidance only. Always verify with your doctor/pharmacist.</p>
+</div>
+</div>
+</div>
+`;
+}
+
+//==================== Bed Availability Functions ====================
+function renderBedAvailability(){
+const container= document.getElementById('bed-availability-list');
+const bedData=[
+{ hospital: 'Civil Hospital', icu: 4, totalICU: 10, ward: 15, totalWard: 50, status: 'available' },
+{ hospital: 'Sacred Heart Hospital', icu: 2, totalICU: 8, ward: 8, totalWard: 40, status: 'critical' },
+{ hospital: 'City Care Clinic', icu: 6, totalICU: 6, ward: 20, totalWard: 30, status: 'available' }
+];
+
+container.innerHTML= bedData.map(data=>{
+const icuPercent= (data.icu/data.totalICU)*100;
+const wardPercent= (data.ward/data.totalWard)*100;
+const statusClass= data.status=== 'available' ? 'bed-available' : data.status=== 'critical' ? 'bed-critical' : 'bed-occupied';
+const statusText= data.status=== 'available' ? 'Available' : data.status=== 'critical' ? 'Limited Beds' : 'Occupied';
+
+return`
+<div class="glass-card rounded-2xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-slate-900">${data.hospital}</h3>
+<span class="bed-status ${statusClass}">
+<i class="fa-solid fa-circle text-xs"></i>
+${statusText}
+</span>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-bold text-slate-700">ICU Beds</span>
+<span class="text-sm font-bold text-red-600">${data.icu}/${data.totalICU} Available</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-2">
+<div class="bg-red-600 h-2 rounded-full" style="width: ${icuPercent}%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-bold text-slate-700">General Ward</span>
+<span class="text-sm font-bold text-blue-600">${data.ward}/${data.totalWard} Available</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-2">
+<div class="bg-blue-600 h-2 rounded-full" style="width: ${wardPercent}%"></div>
+</div>
+</div>
+</div>
+</div>
+`;
+}).join('');
+
+// Populate bed hospital select
+const bedHospitalSelect= document.getElementById('bed-hospital');
+if(bedHospitalSelect){
+bedHospitalSelect.innerHTML= '<option value="">Choose Hospital</option>';
+hospitals.forEach(h=>{
+const option= document.createElement('option');
+option.value= h.id;
+option.textContent= h.name;
+bedHospitalSelect.appendChild(option);
+});
+}
+}
+
+function requestBed(e){
+e.preventDefault();
+const request={
+id: bedRequests.length+ 1,
+hospital: document.getElementById('bed-hospital').options[document.getElementById('bed-hospital').selectedIndex].text,
+patientName: document.getElementById('bed-patient-name').value,
+phone: document.getElementById('bed-patient-phone').value,
+bedType: document.getElementById('bed-type').value,
+condition: document.getElementById('bed-condition').value,
+status: 'Pending',
+requestTime: new Date().toLocaleString()
+};
+bedRequests.push(request);
+showNotification(`Bed request submitted for ${request.bedType} at ${request.hospital}!`, 'success');
+e.target.reset();
+}
+
+//==================== Ambulance Functions ====================
+function requestAmbulance(){
+document.getElementById('ambulance-form').classList.remove('hidden');
+}
+
+function closeAmbulanceForm(){
+document.getElementById('ambulance-form').classList.add('hidden');
+}
+
+function getEmergencyAdvice(){
+const description= document.getElementById('emergency-description').value.trim();
+if(!description){
+alert('Please describe the emergency');
+return;
+}
+
+// Simulate AI emergency advice
+const adviceDiv= document.getElementById('emergency-advice');
+adviceDiv.classList.remove('hidden');
+
+let advice='';
+if(description.toLowerCase().includes('snake')){
+advice=`
+<div class="space-y-3">
+<p class="font-bold text-red-700"><i class="fa-solid fa-triangle-exclamation mr-2"></i>IMMEDIATE ACTIONS:</p>
+<ol class="list-decimal list-inside space-y-2 text-sm">
+<li>Keep the patient calm and still</li>
+<li>Remove tight clothing/jewelry near bite area</li>
+<li>Keep bite area below heart level</li>
+<li>DO NOT cut, suck, or apply ice to the bite</li>
+<li>Call 108 immediately</li>
+<li>Note the snake appearance if possible (for antivenom)</li>
+</ol>
+<p class="mt-3 text-purple-700 font-semibold"><i class="fa-solid fa-ambulance mr-2"></i>Ambulance dispatched to your location. ETA: 5-7 minutes</p>
+</div>
+`;
+}else if(description.toLowerCase().includes('chest') || description.toLowerCase().includes('heart')){
+advice=`
+<div class="space-y-3">
+<p class="font-bold text-red-700"><i class="fa-solid fa-triangle-exclamation mr-2"></i>CARDIAC EMERGENCY - IMMEDIATE ACTIONS:</p>
+<ol class="list-decimal list-inside space-y-2 text-sm">
+<li>Make patient sit or lie down comfortably</li>
+<li>Loosen tight clothing</li>
+<li>If patient has prescribed nitroglycerin, help them take it</li>
+<li>Chew 325mg aspirin if not allergic</li>
+<li>Call 108 immediately</li>
+<li>Be ready to perform CPR if patient becomes unresponsive</li>
+</ol>
+<p class="mt-3 text-purple-700 font-semibold"><i class="fa-solid fa-ambulance mr-2"></i>Ambulance with cardiac care unit dispatched. ETA: 5-7 minutes</p>
+</div>
+`;
+}else{
+advice=`
+<div class="space-y-3">
+<p class="font-bold text-slate-900">AI Emergency Assessment:</p>
+<p class="text-sm">Based on your description: "${description}"</p>
+<p class="font-bold text-red-700 mt-3">Immediate Actions:</p>
+<ol class="list-decimal list-inside space-y-2 text-sm">
+<li>Keep patient calm and comfortable</li>
+<li>Monitor breathing and consciousness</li>
+<li>Do not give food or water</li>
+<li>Call 108 immediately</li>
+<li>Follow dispatcher instructions</li>
+</ol>
+<p class="mt-3 text-purple-700 font-semibold"><i class="fa-solid fa-ambulance mr-2"></i>Ambulance dispatched. ETA: 5-7 minutes</p>
+</div>
+`;
+}
+
+adviceDiv.innerHTML=`
+<div class="flex items-start gap-3 mb-4">
+<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+<i class="fa-solid fa-robot"></i>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900 mb-2">AI Emergency Guidance</h4>
+${advice}
+</div>
+</div>
+`;
+}
+
+function submitAmbulanceRequest(e){
+e.preventDefault();
+const request={
+id: ambulanceRequests.length+ 1,
+patientName: document.getElementById('ambulance-patient-name').value,
+phone: document.getElementById('ambulance-phone').value,
+pickup: document.getElementById('ambulance-pickup').value,
+destination: document.getElementById('ambulance-destination').value || 'Nearest Hospital',
+type: document.getElementById('ambulance-type').value,
+notes: document.getElementById('ambulance-notes').value,
+status: 'Dispatched',
+requestTime: new Date().toLocaleString(),
+eta: '5-7 minutes'
+};
+ambulanceRequests.push(request);
+showNotification(`Ambulance dispatched! ETA: ${request.eta}. Tracking ID: AMB-${String(request.id).padStart(4, '0')}`, 'success');
+closeAmbulanceForm();
+e.target.reset();
+}
+
+//==================== Pharmacy Functions ====================
+function showPharmacyForm(shopName){
+selectedPharmacyShop= shopName;
+document.getElementById('medical-shops').classList.add('hidden');
+document.getElementById('pharmacy-form').classList.remove('hidden');
+document.getElementById('selected-pharmacy').innerText= shopName;
+}
+
+function backToPharmacyShops(){
+document.getElementById('pharmacy-form').classList.add('hidden');
+document.getElementById('pharmacy-confirmation').classList.add('hidden');
+document.getElementById('medical-shops').classList.remove('hidden');
+}
+
+function showPrescriptionUpload(){
+document.getElementById('pharmacy-prescription-upload').classList.remove('hidden');
+document.getElementById('medicine-list').classList.add('hidden');
+}
+
+function showMedicineList(){
+document.getElementById('pharmacy-prescription-upload').classList.add('hidden');
+document.getElementById('medicine-list').classList.remove('hidden');
+}
+
+function addMedicineField(){
+const container= document.getElementById('medicine-fields');
+const div= document.createElement('div');
+div.className= 'flex gap-2';
+div.innerHTML=`
+<input type="text" placeholder="Medicine name" class="flex-1 px-4 py-2 border-2 border-slate-200 rounded-xl">
+<input type="text" placeholder="Quantity" class="w-32 px-4 py-2 border-2 border-slate-200 rounded-xl">
+`;
+container.appendChild(div);
+}
+
+function submitPharmacyOrder(){
+const order={
+id: pharmacyOrders.length+ 1,
+orderNumber: `PH-${String(nextPharmacyOrder++).padStart(4, '0')}`,
+shop: selectedPharmacyShop,
+customerName: document.getElementById('pharmacy-customer-name').value,
+phone: document.getElementById('pharmacy-customer-phone').value,
+status: 'Preparing',
+orderTime: new Date().toLocaleString()
+};
+pharmacyOrders.push(order);
+document.getElementById('pharmacy-order-number').innerText= order.orderNumber;
+document.getElementById('pharmacy-form').classList.add('hidden');
+document.getElementById('pharmacy-confirmation').classList.remove('hidden');
+showNotification(`Order sent to ${selectedPharmacyShop}! Order Number: ${order.orderNumber}`, 'success');
+}
+
+//==================== COORDINATOR DASHBOARD FUNCTIONS ====================
+function updateCoordinatorDashboard(){
+if(!selectedHospital) return;
+const hospitalBookings= bookings.filter(b=> b.hospitalId=== selectedHospital.id);
+const approvedBookings= hospitalBookings.filter(b=> b.status=== 'Approved');
+const pendingBookings= hospitalBookings.filter(b=> b.status=== 'Pending');
+const emergencyCases= hospitalBookings.filter(b=> b.priority=== 'Emergency').length;
+document.getElementById('active-depts').innerText= selectedHospital.departments.length;
+document.getElementById('patients-waiting').innerText= approvedBookings.filter(b=> b.queuePosition> 1).length;
+document.getElementById('pending-approvals').innerText= pendingBookings.length;
+document.getElementById('emergency-cases').innerText= emergencyCases;
+const deptList= document.getElementById('department-list');
+deptList.innerHTML= selectedHospital.departments.map(dept=>{
+const deptBookings= approvedBookings.filter(b=> b.department=== dept);
+const currentToken= deptBookings.find(b=> b.queuePosition=== 1);
+const doctorStatus= doctorStatuses[`${selectedHospital.id}-${dept}`];
+return`
+<div class="dashboard-card rounded-xl p-4">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h4 class="font-bold text-white text-lg">${dept}</h4>
+<p class="text-sm text-slate-400">${deptBookings.length} patients in queue</p>
+</div>
+<span class="live-indicator">
+<span class="live-dot"></span>
+Live
+</span>
+</div>
+${currentToken?`
+<div class="bg-slate-800/50 rounded-xl p-4 mb-4">
+<div class="flex items-center justify-between mb-3">
+<div>
+<div class="text-xs text-slate-400 mb-1">Now Consulting</div>
+<div class="text-2xl font-bold text-white">Token ${String(currentToken.token).padStart(3,'0')}</div>
+<div class="text-sm text-slate-400">${currentToken.name}</div>
+</div>
+<div class="flex gap-2">
+<button onclick="callPatient(${currentToken.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition">
+<i class="fa-solid fa-phone mr-2"></i>Call
+</button>
+<button onclick="markCompleted(${currentToken.id})" class="btn-success text-white px-4 py-2 rounded-lg text-sm font-bold transition">
+<i class="fa-solid fa-check mr-2"></i>Complete
+</button>
+</div>
+</div>
+</div>
+`:`
+<div class="bg-slate-800/50 rounded-xl p-4 mb-4 text-center">
+<div class="text-slate-400">No patient currently consulting</div>
+</div>
+`}
+<div class="flex items-center gap-2 mb-4">
+<span class="text-sm text-slate-400">Doctor Status:</span>
+<select onchange="updateDoctorStatus('${dept}', this.value)" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1 text-sm text-white">
+<option value="available"${doctorStatus.status==='available'?'selected':''}>Available</option>
+<option value="break"${doctorStatus.status==='break'?'selected':''}>On Break</option>
+<option value="delayed"${doctorStatus.status==='delayed'?'selected':''}>Delayed</option>
+<option value="not-available"${doctorStatus.status==='not-available'?'selected':''}>Not Available</option>
+</select>
+<button onclick="updateLastSync()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition">
+<i class="fa-solid fa-rotate mr-1"></i>Update
+</button>
+</div>
+<div class="space-y-2">
+<div class="text-xs text-slate-400 mb-2">Upcoming Patients:</div>
+${deptBookings.slice(1, 4).map((b, index)=>`
+<div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 font-bold text-sm">
+${index+ 2}
+</div>
+<div>
+<div class="text-sm font-bold text-white">Token ${String(b.token).padStart(3, '0')}</div>
+<div class="text-xs text-slate-400">${b.type}</div>
+</div>
+</div>
+${b.priority==='Emergency'?'<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Emergency</span>': b.priority==='High'?'<span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">High Priority</span>': '<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">Normal</span>'}
+</div>
+`).join('')}
+</div>
+<div class="mt-4 pt-4 border-t border-white/10">
+<button onclick="emergencyOverride('${dept}')" class="emergency-btn w-full">
+<i class="fa-solid fa-triangle-exclamation"></i>Emergency Override
+</button>
+</div>
+</div>
+`;
+}).join('');
+const pendingDiv= document.getElementById('pending-list');
+if(pendingBookings.length=== 0){
+pendingDiv.innerHTML= '<p class="text-slate-400 text-center py-8">No pending approvals</p>';
+}else{
+pendingDiv.innerHTML= pendingBookings.map(b=>`
+<div class="bg-slate-800/50 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div>
+<div class="font-bold text-white">Token ${String(b.token).padStart(3, '0')} - ${b.name}</div>
+<div class="text-sm text-slate-400">${b.department} • ${b.type}</div>
+</div>
+${b.priority=== 'Emergency' ? '<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Emergency</span>' : b.priority=== 'High' ? '<span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">High Priority</span>' : '<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">Normal</span>'}
+</div>
+<div class="text-sm text-slate-400 mb-3">
+<div class="font-bold text-slate-300 mb-1">Type: ${b.priority} | Reason:</div>
+<div>${b.symptoms}</div>
+</div>
+<div class="flex gap-2">
+<button onclick="approveBooking(${b.id})" class="flex-1 btn-success text-white px-4 py-2 rounded-lg text-sm font-bold transition">
+<i class="fa-solid fa-check mr-2"></i>Approve
+</button>
+<button onclick="rejectBooking(${b.id})" class="flex-1 btn-danger text-white px-4 py-2 rounded-lg text-sm font-bold transition">
+<i class="fa-solid fa-times mr-2"></i>Reject
+</button>
+</div>
+</div>
+`).join('');
+}
+}
+
+function callPatient(bookingId){
+const booking= bookings.find(b=> b.id=== bookingId);
+if(booking){
+alert(`Calling ${booking.name}...\nToken: ${String(booking.token).padStart(3, '0')}`);
+}
+}
+
+function markCompleted(bookingId){
+const booking= bookings.find(b=> b.id=== bookingId);
+if(booking){
+booking.completedTime= new Date().toLocaleString();
+booking.status= 'Completed';
+updateCoordinatorDashboard();
+showNotification(`Token ${booking.token} marked as completed!`, 'success');
+}
+}
+
+function approveBooking(bookingId){
+const booking= bookings.find(b=> b.id=== bookingId);
+if(booking){
+const approvedForDept= bookings.filter(b=> b.hospitalId=== selectedHospital.id&& b.department=== booking.department&& b.status=== 'Approved').length;
+booking.status='Approved';
+booking.queuePosition= approvedForDept+ 1;
+booking.consultingTime= new Date().toLocaleString();
+updateCoordinatorDashboard();
+showNotification(`Token ${booking.token} approved! Queue Position: ${booking.queuePosition}`, 'success');
+}
+}
+
+function rejectBooking(bookingId){
+const booking= bookings.find(b=> b.id=== bookingId);
+if(booking&& confirm(`Are you sure you want to reject Token ${booking.token}?`)){
+booking.status= 'Rejected';
+updateCoordinatorDashboard();
+showNotification(`Token ${booking.token} rejected`, 'error');
+}
+}
+
+function updateDoctorStatus(department, status){
+doctorStatuses[`${selectedHospital.id}-${department}`]={
+status: status,
+lastUpdate: new Date()
+};
+showNotification(`Doctor status updated to: ${status}`, 'success');
+}
+
+function emergencyOverride(department){
+const token= prompt('Enter token number to move to top (Emergency):');
+if(token){
+const booking= bookings.find(b=> b.token== token&& b.hospitalId=== selectedHospital.id);
+if(booking){
+booking.priority= 'Emergency';
+booking.queuePosition= 1;
+showNotification(`Token ${token} moved to top (Emergency Override)`, 'success');
+updateCoordinatorDashboard();
+}else{
+alert('Token not found!');
+}
+}
+}
+
+//==================== AUTH====================
+function handleLogin(e){
+e.preventDefault();
+const id= document.getElementById('login-id').value.toLowerCase();
+const pass= document.getElementById('login-pass').value;
+if(id=== 'admin' && pass=== 'admin123'){
+currentUser={ role: 'admin'};
+closeLoginModal();
+showSection('coordinator-dashboard');
+}else{
+const hospital= hospitals.find(h=> h.loginId=== id&& h.password=== pass);
+if(hospital){
+currentUser={ role: 'hospital', hospital: hospital};
+selectedHospital= hospital;
+closeLoginModal();
+document.getElementById('coordinator-info').innerText=`Coordinator: ${hospital.name} - OPD Desk`;
+showSection('coordinator-dashboard');
+updateCoordinatorDashboard();
+}else{
+alert('Invalid credentials!');
+}
+}
+}
+
+function handlePortalLogin(e){
+e.preventDefault();
+alert('Portal login coming soon!');
+}
+
+function closeLoginModal(){
+document.getElementById('login-modal').classList.add('hidden');
+}
+
+//==================== CHATBOT FUNCTIONS====================
+function toggleChatbot(){
+const chat= document.getElementById('chatbot');
+chat.style.display= chat.style.display=== 'flex' ? 'none' : 'flex';
+}
+
+function openAIChat(){
+document.getElementById('chatbot').style.display= 'flex';
+}
+
+function handleChatEnter(e){
+if(e.key=== 'Enter') sendChat();
+}
+
+function sendChat(){
+const input= document.getElementById('chat-input');
+const message= input.value.trim();
+if(!message) return;
+const messagesDiv= document.getElementById('chat-messages');
+messagesDiv.innerHTML+=`<div class="message user"><div class="message-content">${escapeHtml(message)}</div></div>`;
+input.value= '';
+messagesDiv.scrollTop= messagesDiv.scrollHeight;
+setTimeout(()=>{
+processChat(message);
+}, 500);
+}
+
+function addBotMessage(message){
+const messagesDiv= document.getElementById('chat-messages');
+messagesDiv.innerHTML+=`<div class="message bot"><div class="message-content">${escapeHtml(message).replace(/\n/g, '<br>')}</div></div>`;
+messagesDiv.scrollTop= messagesDiv.scrollHeight;
+}
+
+function escapeHtml(text){
+return text
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/>/g, '&gt;')
+.replace(/"/g, '&quot;')
+.replace(/'/g, '&#039;');
+}
+
+function showQuickReplies(replies){
+const messagesDiv= document.getElementById('chat-messages');
+const repliesDiv= document.createElement('div');
+repliesDiv.className= 'quick-replies';
+repliesDiv.innerHTML= replies.map(r=> `<button class="quick-reply-btn" onclick="handleQuickReply('${r}')">${r}</button>`).join('');
+messagesDiv.appendChild(repliesDiv);
+messagesDiv.scrollTop= messagesDiv.scrollHeight;
+}
+
+function handleQuickReply(reply){
+const input= document.getElementById('chat-input');
+input.value= reply;
+sendChat();
+}
+
+async function processChat(message){
+const lower= message.toLowerCase();
+if(chatStep> 0&& chatStep< 5){
+handleChatFlow(message);
+return;
+}
+if(lower.includes('book') || lower.includes('appointment')){
+addBotMessage("I can help you book! Which hospital?");
+showQuickReplies(hospitals.map(h=> h.name));
+chatStep= 1;
+}else if(lower.includes('queue') || lower.includes('wait')){
+addBotMessage("To check queue: 1. Select hospital 2. Choose department 3. View live queue");
+}else if(lower.includes('symptom') || lower.includes('diagnose')){
+addBotMessage("I can help analyze your symptoms. Please describe what you're experiencing, or use the AI Symptom Checker on the Diagnostics page.");
+showSection('diagnostics');
+}else if(lower.includes('bed') || lower.includes('icu')){
+addBotMessage("I can help you check bed availability. Click on 'Beds' in the navigation menu to see real-time bed status across hospitals.");
+showSection('beds');
+}else if(lower.includes('ambulance') || lower.includes('emergency')){
+addBotMessage("For emergencies, please call 108 immediately. I can also help you request an ambulance - click on 'Ambulance' in the navigation menu.");
+}else if(lower.includes('how') || lower.includes('work')){
+addBotMessage("CareBridge works in 3 steps:\n1. Book online or check live queue\n2. Get token number via WhatsApp\n3. Check queue and visit when it's your turn\n\nWe also offer AI-powered symptom checking, bed availability tracking, and ambulance services!");
+}else{
+const aiReply= await getOpenRouterReply(message);
+addBotMessage(aiReply || "I'm your AI healthcare assistant! I can help you with:\n• Booking appointments\n• Checking symptoms (AI-powered)\n• Finding hospitals & beds\n• Emergency assistance\n• Live queue status\n\nWhat would you like to know?");
+}
+}
+
+async function getOpenRouterReply(userMessage, systemPrompt){
+try{
+const response= await fetch(`${API_BASE_URL}/api/chat`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+message: userMessage,
+systemPrompt: systemPrompt || "You are CareBridge AI assistant. Give brief, safe healthcare guidance. For emergencies, instruct users to call local emergency services immediately."
+})
+});
+if(!response.ok){
+return "I'm having trouble reaching the AI backend right now. Please try again.";
+}
+const data= await response.json();
+return data.reply || "I couldn't generate a response. Please try again.";
+}catch(error){
+console.error('Backend AI error:', error);
+return "Cannot connect to backend API. Start backend server on localhost:3000.";
+}
+}
+
+function handleChatFlow(message){
+switch(chatStep){
+case 1:
+const hospital= hospitals.find(h=> h.name.toLowerCase()=== message.toLowerCase());
+if(hospital){
+chatData.hospital= hospital;
+chatStep= 2;
+addBotMessage(`Great! ${hospital.name} has: ${hospital.departments.join(', ')}. Which department?`);
+}else{
+addBotMessage("Please select from the options above.");
+}
+break;
+case 2:
+if(chatData.hospital.departments.some(d=> d.toLowerCase()=== message.toLowerCase())){
+chatData.department= message;
+chatStep= 3;
+addBotMessage("Perfect! What's your name?");
+}else{
+addBotMessage("Please select a valid department.");
+}
+break;
+case 3:
+chatData.name= message;
+chatStep= 4;
+addBotMessage(`Nice to meet you, ${message}! What's your WhatsApp number?`);
+break;
+case 4:
+chatData.phone= message;
+addBotMessage(`Booking submitted!\n${chatData.hospital.name}\n${chatData.department}\nToken: ${String(nextToken).padStart(3, '0')}\n\nYou'll receive confirmation via WhatsApp!`);
+chatStep= 0;
+chatData={};
+nextToken++;
+break;
+}
+}
+
+// Initialize
+init();
+</script>
+</body>
+</html>

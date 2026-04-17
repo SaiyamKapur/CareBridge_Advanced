@@ -1,0 +1,20 @@
+{
+  "name": "carebridge-advanced",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CareBridge production backend with AI and OCR",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "helmet": "^7.2.0",
+    "multer": "^2.0.2",
+    "pdf-parse": "^1.1.1",
+    "tesseract.js": "^5.1.1"
+  }
+}
